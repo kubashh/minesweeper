@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   output: "export",
   distDir: `dist`,
+  basePath: `/minesweeper`,
 }
 
 export default nextConfig
