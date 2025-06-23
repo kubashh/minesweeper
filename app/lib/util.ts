@@ -1,0 +1,109 @@
+import { DIRECTIONS } from "./consts"
+
+function createBoard(rows: number, cols: number) {
+  const board: TBoard = []
+
+  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+    board[rowIndex] = []
+
+    for (let ceilIndex = 0; ceilIndex < cols; ceilIndex++) {
+      board[rowIndex][ceilIndex] = {
+        value: null,
+        isFlagged: false,
+        isOpened: false,
+      }
+    }
+  }
+
+  return board
+}
+
+function randIndex(max: number) {
+  return Math.floor(Math.random() * max)
+}
+
+export function initBoard(rows: number, cols: number, totalMines: number) {
+  const board = createBoard(rows, cols)
+
+  for (let mines = 0; mines < totalMines; ) {
+    const row = randIndex(rows)
+    const col = randIndex(cols)
+
+    if (board[row][col].value !== `mine`) {
+      ;(board[row][col] as GameCeil).value = `mine`
+      mines++
+    }
+  }
+
+  board.forEach((row, rowIndex) => {
+    row.forEach((ceil, colIndex) => {
+      if (ceil.value !== `mine`) {
+        let minesAround = 0
+
+        DIRECTIONS.forEach(([dRow, dCol]) => {
+          const newRow = rowIndex + dRow
+          const newCol = colIndex + dCol
+
+          if (newRow in board && newCol in row && board[newRow][newCol].value === `mine`) minesAround++
+        })
+
+        if (minesAround > 0) ceil.value = minesAround
+      }
+    })
+  })
+
+  return board
+}
+
+export function initGame(rows: number, cols: number, totalMines: number) {
+  return initBoard(rows, cols, totalMines)
+}
+
+export function revealEmptyCells(board: TBoard, rows: number, cols: number, row: number, col: number) {
+  const queue: [number, number][] = [[row, col]]
+
+  while (queue.length > 0) {
+    const n = queue.shift()
+    if (!n) return
+    const [currentRow, currentCol] = n
+
+    const cell = board[currentRow][currentCol]
+    cell.isOpened = true
+
+    if (!cell.value) {
+      for (const [dRow, dCol] of DIRECTIONS) {
+        const newRow = currentRow + dRow
+        const newCol = currentCol + dCol
+        console.log(newRow, newCol)
+
+        if (
+          newRow in board &&
+          newCol in board[0] &&
+          !board[newRow][newCol].isOpened &&
+          !board[newRow][newCol].isFlagged
+        ) {
+          queue.push([newRow, newCol])
+        }
+      }
+    }
+  }
+}
+
+export function revealMines(board: TBoard, highlightWin?: boolean) {
+  for (const row of board)
+    for (const cell of row)
+      if (cell.value === `mine`) {
+        cell.isOpened = true
+        if (highlightWin) cell.hightlight = `bg-[green]`
+      }
+}
+
+export function checkGameWin(board: TBoard, totalMines: number) {
+  let unopenedCells = 0
+
+  for (const row of board) for (const cell of row) if (!cell.isOpened) unopenedCells++
+
+  console.log(unopenedCells, totalMines)
+
+  return unopenedCells === totalMines
+}
