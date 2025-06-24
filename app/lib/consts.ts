@@ -40,3 +40,12 @@ export const LEVELS = {
 }
 
 export const DEFAULT_LEVEL: TLevel = `easy`
+
+export const SOUNDS = {
+  REVEAL_EMPTY: "reveal_empty.wav",
+  REVEAL_NUMBER: "reveal_number.wav",
+  FLAG_PLACE: "flag_place.wav",
+  FLAG_REMOVE: "flag_remove.wav",
+  GAME_OVER: "game_over.wav",
+  GAME_WIN: "game_win.wav",
+}

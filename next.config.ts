@@ -3,7 +3,7 @@ import type { NextConfig } from "next"
 const nextConfig: NextConfig = {
   devIndicators: false,
   reactStrictMode: false,
-  output: "export",
+  output: `export`,
   distDir: `dist`,
   basePath: `/minesweeper`,
 }

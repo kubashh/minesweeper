@@ -1,6 +1,6 @@
 import Cell from "./Cell"
 
-export default function Board({ board, handleCellLeftClick, level }: BoardProps) {
+export default function Board({ board, level, handleCellLeftClick, handleCellRightClick }: BoardProps) {
   let i = 0
   return (
     <div>
@@ -15,6 +15,7 @@ export default function Board({ board, handleCellLeftClick, level }: BoardProps)
                   key={i}
                   cell={cell}
                   handleCellLeftClick={handleCellLeftClick}
+                  handleCellRightClick={handleCellRightClick}
                   rowIndex={rowIndex}
                   colIndex={colIndex}
                   level={level}

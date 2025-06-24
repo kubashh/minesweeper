@@ -1,5 +1,13 @@
 import { DIRECTIONS } from "./consts"
 
+export function deepCopy(obj: any) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export function nowS() {
+  return performance.now() / 1000
+}
+
 function createBoard(rows: number, cols: number) {
   const board: TBoard = []
 
@@ -74,7 +82,6 @@ export function revealEmptyCells(board: TBoard, rows: number, cols: number, row:
       for (const [dRow, dCol] of DIRECTIONS) {
         const newRow = currentRow + dRow
         const newCol = currentCol + dCol
-        console.log(newRow, newCol)
 
         if (
           newRow in board &&
@@ -103,7 +110,17 @@ export function checkGameWin(board: TBoard, totalMines: number) {
 
   for (const row of board) for (const cell of row) if (!cell.isOpened) unopenedCells++
 
-  console.log(unopenedCells, totalMines)
-
   return unopenedCells === totalMines
+}
+
+export function getMinesLeft(board: TBoard) {
+  let minesLeft = 0
+
+  for (const row of board)
+    for (const cell of row) {
+      if (cell.value === `mine`) minesLeft++
+      if (cell.isFlagged) minesLeft--
+    }
+
+  return minesLeft
 }
