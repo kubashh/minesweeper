@@ -14,8 +14,8 @@ function createBoard(rows: number, cols: number) {
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     board[rowIndex] = []
 
-    for (let ceilIndex = 0; ceilIndex < cols; ceilIndex++) {
-      board[rowIndex][ceilIndex] = {
+    for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
+      board[rowIndex][cellIndex] = {
         value: null,
         isFlagged: false,
         isOpened: false,
@@ -38,14 +38,14 @@ export function initBoard(rows: number, cols: number, totalMines: number) {
     const col = randIndex(cols)
 
     if (board[row][col].value !== `mine`) {
-      ;(board[row][col] as GameCeil).value = `mine`
+      ;(board[row][col] as GameCell).value = `mine`
       mines++
     }
   }
 
   board.forEach((row, rowIndex) => {
-    row.forEach((ceil, colIndex) => {
-      if (ceil.value !== `mine`) {
+    row.forEach((cell, colIndex) => {
+      if (cell.value !== `mine`) {
         let minesAround = 0
 
         DIRECTIONS.forEach(([dRow, dCol]) => {
@@ -55,7 +55,7 @@ export function initBoard(rows: number, cols: number, totalMines: number) {
           if (newRow in board && newCol in row && board[newRow][newCol].value === `mine`) minesAround++
         })
 
-        if (minesAround > 0) ceil.value = minesAround
+        if (minesAround > 0) cell.value = minesAround
       }
     })
   })

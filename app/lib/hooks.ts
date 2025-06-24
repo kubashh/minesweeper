@@ -80,25 +80,21 @@ export function useMinesweeper() {
 
   const { playSoundEffect } = useSFX()
 
-  function startNewGame() {
+  function startNewGame(row?: number, col?: number) {
     setGameState(``)
     resetTimer()
     setTotalFlags(0)
-    setGameBoard(initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines))
+    let newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
+    if (row && col) {
+      while (newBoard[row][col].value === `mine`) {
+        newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
+      }
+      openCell(row, col)
+    }
+    setGameBoard(newBoard)
   }
 
-  useEffect(() => startNewGame(), [level])
-
-  const minesLeft = getMinesLeft(board)
-  const { startTimer, stopTimer, resetTimer, timeDiff, timerRunning } = useTimer()
-
-  useEffect(() => {
-    if (gameState !== ``) stopTimer()
-  })
-
-  function handleCellLeftClick(row: number, col: number) {
-    if (gameState === `lose` || board[row][col].isOpened || board[row][col].isFlagged) return
-
+  function openCell(row: number, col: number) {
     const isFirstTime = !timerRunning
 
     if (!timerRunning) startTimer()
@@ -112,8 +108,7 @@ export function useMinesweeper() {
 
     if (isMineCell) {
       if (isFirstTime) {
-        startNewGame()
-        handleCellLeftClick(row, col)
+        startNewGame(row, col)
         return
       }
 
@@ -139,6 +134,21 @@ export function useMinesweeper() {
     }
 
     setGameBoard(newBoard)
+  }
+
+  useEffect(() => startNewGame(), [level])
+
+  const minesLeft = getMinesLeft(board)
+  const { startTimer, stopTimer, resetTimer, timeDiff, timerRunning } = useTimer()
+
+  useEffect(() => {
+    if (gameState !== ``) stopTimer()
+  })
+
+  function handleCellLeftClick(row: number, col: number) {
+    if (gameState === `lose` || board[row][col].isOpened || board[row][col].isFlagged) return
+
+    openCell(row, col)
   }
 
   function handleCellRightClick(e: React.MouseEvent<HTMLDivElement>, row: number, col: number) {

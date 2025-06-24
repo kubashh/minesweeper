@@ -1,4 +1,4 @@
-export const CEIL_NUMBER_COLORS = [
+export const CELL_NUMBER_COLORS = [
   null,
   `text-[blue]`,
   `text-[green]`,

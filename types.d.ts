@@ -12,7 +12,7 @@ type BoardProps = {
 }
 
 type CellProps = {
-  cell: GameCeil
+  cell: GameCell
   rowIndex: number
   colIndex: number
   level: TLevel
@@ -44,34 +44,34 @@ type OpenedCail = {
   isFlagged: false
 }
 
-type ClosedCeil = {
+type ClosedCell = {
   isOpened: false
   isFlagged: boolean
 }
 
-type MineCeil = {
+type MineCell = {
   value: `mine`
   hightlight?: `bg-[red]` | `bg-[green]`
 }
 
-type NumberCeil = {
+type NumberCell = {
   value: number
 }
 
-type EmptyCeil = {
+type EmptyCell = {
   value: null
   isFlagged: false
   isOpened: false
 }
 
-type OpenedMineCeil = OpenedCail & MineCeil
-type ClosedMineCeil = ClosedCeil & MineCeil
-type OpenedNumberCeil = OpenedCail & NumberCeil
-type ClosedNumberCeil = ClosedCeil & NumberCeil
+type OpenedMineCell = OpenedCail & MineCell
+type ClosedMineCell = ClosedCell & MineCell
+type OpenedNumberCell = OpenedCail & NumberCell
+type ClosedNumberCell = ClosedCell & NumberCell
 
-type GameCeil = OpenedMineCeil | ClosedMineCeil | OpenedNumberCeil | ClosedNumberCeil | EmptyCeil
+type GameCell = OpenedMineCell | ClosedMineCell | OpenedNumberCell | ClosedNumberCell | EmptyCell
 
-type TBoard = GameCeil[][]
+type TBoard = GameCell[][]
 
 // Sounds
 type TSoundName = `REVEAL_EMPTY` | `REVEAL_NUMBER` | `FLAG_PLACE` | `FLAG_REMOVE` | `GAME_OVER` | `GAME_WIN`
