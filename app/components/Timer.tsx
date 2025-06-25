@@ -1,4 +1,4 @@
-import timerImage from "@/res/icons/timer.svg"
+import timerImage from "@/public/icons/timer.svg"
 import { timer } from "../lib/consts"
 import { nowS } from "../lib/util"
 

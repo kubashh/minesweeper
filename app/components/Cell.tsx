@@ -1,6 +1,6 @@
 import clsx from "clsx"
-import bombImage from "@/res/icons/bomb.svg"
-import flagImage from "@/res/icons/redFlag.png"
+import bombImage from "@/public/icons/bomb.svg"
+import flagImage from "@/public/icons/redFlag.png"
 import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts"
 import { openCell, refreshMinesLeft } from "../lib/util"
 import { playSoundEffect } from "../lib/sfx"
