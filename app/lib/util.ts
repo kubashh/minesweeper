@@ -1,4 +1,4 @@
-import { DIRECTIONS } from "./consts"
+import { board, DIRECTIONS, minesLeft } from "./consts"
 
 export function nowS() {
   return performance.now() / 1000
@@ -63,7 +63,7 @@ export function initGame(rows: number, cols: number, totalMines: number) {
   return initBoard(rows, cols, totalMines)
 }
 
-export function revealEmptyCells(board: TBoard, row: number, col: number) {
+export function revealEmptyCells(row: number, col: number) {
   const queue: [number, number][] = [[row, col]]
 
   while (queue.length > 0) {
@@ -71,7 +71,7 @@ export function revealEmptyCells(board: TBoard, row: number, col: number) {
     if (!n) return
     const [currentRow, currentCol] = n
 
-    const cell = board[currentRow][currentCol]
+    const cell = board.value[currentRow][currentCol]
     cell.isOpened = true
 
     if (!cell.value) {
@@ -80,10 +80,10 @@ export function revealEmptyCells(board: TBoard, row: number, col: number) {
         const newCol = currentCol + dCol
 
         if (
-          newRow in board &&
-          newCol in board[0] &&
-          !board[newRow][newCol].isOpened &&
-          !board[newRow][newCol].isFlagged
+          newRow in board.value &&
+          newCol in board.value[0] &&
+          !board.value[newRow][newCol].isOpened &&
+          !board.value[newRow][newCol].isFlagged
         ) {
           queue.push([newRow, newCol])
         }
@@ -92,8 +92,8 @@ export function revealEmptyCells(board: TBoard, row: number, col: number) {
   }
 }
 
-export function revealMines(board: TBoard, highlightWin?: boolean) {
-  for (const row of board)
+export function revealMines(highlightWin?: boolean) {
+  for (const row of board.value)
     for (const cell of row)
       if (cell.value === `mine`) {
         cell.isOpened = true
@@ -101,22 +101,22 @@ export function revealMines(board: TBoard, highlightWin?: boolean) {
       }
 }
 
-export function checkGameWin(board: TBoard, totalMines: number) {
+export function checkGameWin(totalMines: number) {
   let unopenedCells = 0
 
-  for (const row of board) for (const cell of row) if (!cell.isOpened) unopenedCells++
+  for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++
 
   return unopenedCells === totalMines
 }
 
-export function getMinesLeft(board: TBoard) {
-  let minesLeft = 0
+export function refreshMinesLeft() {
+  let mines = 0
 
-  for (const row of board)
+  for (const row of board.value)
     for (const cell of row) {
-      if (cell.value === `mine`) minesLeft++
-      if (cell.isFlagged) minesLeft--
+      if (cell.value === `mine`) mines++
+      if (cell.isFlagged) mines--
     }
 
-  return minesLeft
+  minesLeft.value = mines
 }

@@ -1,5 +1,5 @@
 import GameStatus from "./GameStatus"
-import TimerDisplay from "./TimerDisplay"
+import Timer from "./Timer"
 
 export default function Header({ startNewGame }: HeaderProps) {
   return (
@@ -8,7 +8,7 @@ export default function Header({ startNewGame }: HeaderProps) {
       <button className="px-3 py-1 bg-zinc-700 text-zinc-50 rounded-md cursor-pointer" onClick={startNewGame}>
         Nowa gra
       </button>
-      <TimerDisplay />
+      <Timer />
     </header>
   )
 }
