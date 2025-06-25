@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react"
-import { checkGameWin, deepCopy, getMinesLeft, initGame, nowS, revealEmptyCells, revealMines } from "./util"
-import { DEFAULT_LEVEL, LEVELS, SOUNDS } from "./consts"
+import { checkGameWin, getMinesLeft, initGame, nowS, revealEmptyCells, revealMines } from "./util"
+import { board, gameStatus, level, LEVELS, minesLeft, SOUNDS, timer } from "./consts"
 
-function useRefresh() {
+export function useRefresh() {
   const f = useState(false)[1]
   return () => f((prev) => !prev)
 }
 
 function useTimer() {
   const refresh = useRefresh()
+
   const [timeStarted, setTimeStarted] = useState<number>(0)
 
   const realDiff = nowS() - timeStarted
-  const timeDiff = Math.floor(realDiff)
+
+  if (timeStarted) timer.value = Math.floor(realDiff)
 
   function startTimer() {
     setTimeStarted(nowS())
@@ -29,14 +31,13 @@ function useTimer() {
   }
 
   useEffect(() => {
-    if (timeStarted) setTimeout(refresh, (timeDiff - realDiff + 1) * 1000)
+    if (timeStarted) setTimeout(refresh, (timer.value - realDiff + 1) * 1000)
   })
 
   return {
     startTimer,
     stopTimer,
     resetTimer,
-    timeDiff,
     timerRunning: Boolean(timeStarted),
   }
 }
@@ -69,19 +70,13 @@ function useSFX() {
 }
 
 export function useMinesweeper() {
-  const [level, setLevel] = useState(DEFAULT_LEVEL)
-  const currentLevel = LEVELS[level]
+  const currentLevel = LEVELS[level.value]
   const [, setTotalFlags] = useState(0)
-
-  const [board, setGameBoard] = useState(
-    initGame(LEVELS[DEFAULT_LEVEL].rows, LEVELS[DEFAULT_LEVEL].cols, LEVELS[DEFAULT_LEVEL].totalMines)
-  )
-  const [gameState, setGameState] = useState<TGameStatus>(``)
 
   const { playSoundEffect } = useSFX()
 
   function startNewGame(row?: number, col?: number) {
-    setGameState(``)
+    gameStatus.value = `playing`
     resetTimer()
     setTotalFlags(0)
     let newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
@@ -91,7 +86,7 @@ export function useMinesweeper() {
       }
       openCell(row, col)
     }
-    setGameBoard(newBoard)
+    board.value = newBoard
   }
 
   function openCell(row: number, col: number) {
@@ -99,7 +94,7 @@ export function useMinesweeper() {
 
     if (!timerRunning) startTimer()
 
-    const newBoard: TBoard = deepCopy(board)
+    const newBoard = board.value
 
     const cell = newBoard[row][col]
     const isMineCell = cell.value === `mine`
@@ -107,14 +102,11 @@ export function useMinesweeper() {
     const isEmptyCell = !cell.value
 
     if (isMineCell) {
-      if (isFirstTime) {
-        startNewGame(row, col)
-        return
-      }
+      if (isFirstTime) return startNewGame(row, col)
 
       playSoundEffect(`GAME_OVER`)
       cell.isOpened = true
-      setGameState(`lose`)
+      gameStatus.value = `lose`
       cell.hightlight = `bg-[red]`
       revealMines(newBoard, false)
     } else {
@@ -123,66 +115,51 @@ export function useMinesweeper() {
         cell.isOpened = true
       } else if (isEmptyCell) {
         playSoundEffect(`REVEAL_EMPTY`)
-        revealEmptyCells(newBoard, LEVELS[level].rows, LEVELS[level].cols, row, col)
+        revealEmptyCells(newBoard, row, col)
       }
 
       if (checkGameWin(newBoard, 10)) {
         playSoundEffect(`GAME_WIN`)
-        revealMines(board, true)
-        setGameState(`win`)
+        revealMines(board.value, true)
+        gameStatus.value = `win`
       }
     }
 
-    setGameBoard(newBoard)
+    board.value = newBoard
   }
 
-  useEffect(() => startNewGame(), [level])
+  useEffect(() => startNewGame(), [level.value])
 
-  const minesLeft = getMinesLeft(board)
-  const { startTimer, stopTimer, resetTimer, timeDiff, timerRunning } = useTimer()
+  minesLeft.value = getMinesLeft(board.value)
+  const { startTimer, stopTimer, resetTimer, timerRunning } = useTimer()
 
   useEffect(() => {
-    if (gameState !== ``) stopTimer()
+    if (gameStatus.value !== `playing`) stopTimer()
   })
 
   function handleCellLeftClick(row: number, col: number) {
-    if (gameState === `lose` || board[row][col].isOpened || board[row][col].isFlagged) return
+    if (gameStatus.value === `lose` || board.value[row][col].isOpened || board.value[row][col].isFlagged) return
 
     openCell(row, col)
   }
 
-  function handleCellRightClick(e: React.MouseEvent<HTMLDivElement>, row: number, col: number) {
-    e.preventDefault()
+  function handleCellRightClick(row: number, col: number) {
+    if (gameStatus.value !== `playing` || board.value[row][col].isOpened) return
+    if (minesLeft.value === 0 && !board.value[row][col].isFlagged) return
 
-    if (gameState !== `` || board[row][col].isOpened) return
-    if (minesLeft === 0 && !board[row][col].isFlagged) return
+    const cell = board.value[row][col]
 
-    setGameBoard((prev) => {
-      const newBoard: TBoard = deepCopy(prev)
-      const cell = newBoard[row][col]
+    if (cell.isFlagged) {
+      playSoundEffect(`FLAG_REMOVE`)
+    } else {
+      playSoundEffect(`FLAG_REMOVE`)
+    }
 
-      if (cell.isFlagged) {
-        playSoundEffect(`FLAG_REMOVE`)
-      } else {
-        playSoundEffect(`FLAG_REMOVE`)
-      }
+    setTotalFlags((prev) => (cell.isFlagged ? -1 : 1 + prev))
+    cell.isFlagged = !cell.isFlagged
 
-      setTotalFlags((prev) => (cell.isFlagged ? -1 : 1 + prev))
-      cell.isFlagged = !cell.isFlagged
-
-      return newBoard
-    })
+    board.refresh?.()
   }
 
-  return {
-    board,
-    level,
-    setLevel,
-    gameState,
-    handleCellLeftClick,
-    handleCellRightClick,
-    timeDiff,
-    minesLeft,
-    startNewGame,
-  }
+  return { handleCellLeftClick, handleCellRightClick, startNewGame }
 }

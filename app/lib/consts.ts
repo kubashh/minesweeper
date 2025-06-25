@@ -1,3 +1,6 @@
+import { Signal } from "./classes"
+import { initGame, nowS } from "./util"
+
 export const CELL_NUMBER_COLORS = [
   null,
   `text-[blue]`,
@@ -39,13 +42,19 @@ export const LEVELS = {
   },
 }
 
-export const DEFAULT_LEVEL: TLevel = `easy`
-
 export const SOUNDS = {
-  REVEAL_EMPTY: "reveal_empty.wav",
-  REVEAL_NUMBER: "reveal_number.wav",
-  FLAG_PLACE: "flag_place.wav",
-  FLAG_REMOVE: "flag_remove.wav",
-  GAME_OVER: "game_over.wav",
-  GAME_WIN: "game_win.wav",
+  REVEAL_EMPTY: "revealEmpty.wav",
+  REVEAL_NUMBER: "revealNumber.wav",
+  FLAG_PLACE: "flagPlace.wav",
+  FLAG_REMOVE: "flagRemove.wav",
+  GAME_OVER: "gameOver.wav",
+  GAME_WIN: "gameWin.wav",
 }
+
+export const gameStatus = new Signal<TGameStatus>(`playing`)
+export const level = new Signal<TLevel>(`easy`)
+export const timer = new Signal(nowS())
+export const minesLeft = new Signal(0)
+export const board = new Signal<TBoard>(
+  initGame(LEVELS[level.value].rows, LEVELS[level.value].cols, LEVELS[level.value].totalMines)
+)

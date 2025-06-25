@@ -1,9 +1,5 @@
 import { DIRECTIONS } from "./consts"
 
-export function deepCopy(obj: any) {
-  return JSON.parse(JSON.stringify(obj))
-}
-
 export function nowS() {
   return performance.now() / 1000
 }
@@ -31,19 +27,19 @@ function randIndex(max: number) {
 }
 
 export function initBoard(rows: number, cols: number, totalMines: number) {
-  const board = createBoard(rows, cols)
+  const newBoard = createBoard(rows, cols)
 
   for (let mines = 0; mines < totalMines; ) {
     const row = randIndex(rows)
     const col = randIndex(cols)
 
-    if (board[row][col].value !== `mine`) {
-      ;(board[row][col] as GameCell).value = `mine`
+    if (newBoard[row][col].value !== `mine`) {
+      ;(newBoard[row][col] as GameCell).value = `mine`
       mines++
     }
   }
 
-  board.forEach((row, rowIndex) => {
+  newBoard.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       if (cell.value !== `mine`) {
         let minesAround = 0
@@ -52,7 +48,7 @@ export function initBoard(rows: number, cols: number, totalMines: number) {
           const newRow = rowIndex + dRow
           const newCol = colIndex + dCol
 
-          if (newRow in board && newCol in row && board[newRow][newCol].value === `mine`) minesAround++
+          if (newRow in newBoard && newCol in row && newBoard[newRow][newCol].value === `mine`) minesAround++
         })
 
         if (minesAround > 0) cell.value = minesAround
@@ -60,14 +56,14 @@ export function initBoard(rows: number, cols: number, totalMines: number) {
     })
   })
 
-  return board
+  return newBoard
 }
 
 export function initGame(rows: number, cols: number, totalMines: number) {
   return initBoard(rows, cols, totalMines)
 }
 
-export function revealEmptyCells(board: TBoard, rows: number, cols: number, row: number, col: number) {
+export function revealEmptyCells(board: TBoard, row: number, col: number) {
   const queue: [number, number][] = [[row, col]]
 
   while (queue.length > 0) {

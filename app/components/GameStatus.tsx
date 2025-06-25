@@ -1,13 +1,15 @@
 import bombIcon from "@/public/icons/bomb.svg"
+import { gameStatus, minesLeft } from "../lib/consts"
 
-export default function GameStatus({ gameState, minesLeft }: GameStatusProps) {
-  if (gameState === `win`) return <div>Wygrałeś!</div>
-  if (gameState === `lose`) return <div>Koniec gry!</div>
+export default function GameStatus() {
+  gameStatus.bind()
+  if (gameStatus.value === `win`) return <div>Wygrałeś!</div>
+  if (gameStatus.value === `lose`) return <div>Koniec gry!</div>
 
   return (
     <div className="flex items-center">
       <img width="40" height="40" src={bombIcon.src} />
-      {minesLeft}
+      {minesLeft.value}
     </div>
   )
 }

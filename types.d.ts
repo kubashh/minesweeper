@@ -5,37 +5,24 @@
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
 type BoardProps = {
-  board: TBoard
-  level: TLevel
   handleCellLeftClick: (a: number, b: number) => void
-  handleCellRightClick: (a: React.MouseEvent<HTMLDivElement>, row: number, col: number) => void
+  handleCellRightClick: (row: number, col: number) => void
 }
 
 type CellProps = {
   cell: GameCell
   rowIndex: number
   colIndex: number
-  level: TLevel
   handleCellLeftClick: (a: number, b: number) => void
-  handleCellRightClick: (a: React.MouseEvent<HTMLDivElement>, row: number, col: number) => void
+  handleCellRightClick: (row: number, col: number) => void
 }
 
-type HeaderProps = GameStatusProps &
-  TimerDisplayProps & {
-    startNewGame: () => void
-  }
-
-type GameStatusProps = {
-  gameState: TGameStatus
-  minesLeft: number
-}
-
-type TimerDisplayProps = {
-  timeDiff: number
+type HeaderProps = {
+  startNewGame: () => void
 }
 
 // Game
-type TGameStatus = `` | `lose` | `win`
+type TGameStatus = `playing` | `lose` | `win`
 type TLevel = `easy` | `medium` | `expert`
 
 // Cell
