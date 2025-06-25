@@ -20,7 +20,7 @@ export function Game() {
 }
 
 export default function Home() {
-  if (!useClient()) return
+  if (!useClient()) return <></>
 
   return <Game />
 }
