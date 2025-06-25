@@ -4,21 +4,10 @@
 // Props
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
-type BoardProps = {
-  handleCellLeftClick: (a: number, b: number) => void
-  handleCellRightClick: (row: number, col: number) => void
-}
-
 type CellProps = {
   cell: GameCell
   rowIndex: number
   colIndex: number
-  handleCellLeftClick: (a: number, b: number) => void
-  handleCellRightClick: (row: number, col: number) => void
-}
-
-type HeaderProps = {
-  startNewGame: () => void
 }
 
 // Game

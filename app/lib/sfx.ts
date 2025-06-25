@@ -16,7 +16,10 @@ function loadSFX() {
   }
 }
 
-if (typeof window !== `undefined`) loadSFX()
+if (typeof window !== `undefined`) {
+  window.oncontextmenu = (e) => e.preventDefault()
+  loadSFX()
+}
 
 export function playSoundEffect(name: TSoundName) {
   const audio = soundsList[name]

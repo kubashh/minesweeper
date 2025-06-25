@@ -1,15 +1,36 @@
 import clsx from "clsx"
 import bombImage from "@/public/icons/bomb.svg"
 import flagImage from "@/public/icons/redFlag.png"
-import { CELL_NUMBER_COLORS, level } from "../lib/consts"
+import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts"
+import { openCell, refreshMinesLeft } from "../lib/util"
+import { playSoundEffect } from "../lib/sfx"
 
-export default function Cell({
-  cell,
-  rowIndex,
-  colIndex,
-  handleCellLeftClick,
-  handleCellRightClick,
-}: CellProps) {
+function handleCellLeftClick(row: number, col: number) {
+  if (gameStatus.value === `lose` || board.value[row][col].isOpened || board.value[row][col].isFlagged) return
+
+  openCell(row, col)
+}
+
+function handleCellRightClick(row: number, col: number) {
+  if (gameStatus.value !== `playing` || board.value[row][col].isOpened) return
+  if (minesLeft.value === 0 && !board.value[row][col].isFlagged) return
+
+  const cell = board.value[row][col]
+
+  if (cell.isFlagged) {
+    playSoundEffect(`FLAG_REMOVE`)
+  } else {
+    playSoundEffect(`FLAG_REMOVE`)
+  }
+
+  cell.isFlagged = !cell.isFlagged
+
+  refreshMinesLeft()
+
+  board.refresh?.()
+}
+
+export default function Cell({ cell, rowIndex, colIndex }: CellProps) {
   return (
     <div
       className={clsx(
@@ -17,6 +38,7 @@ export default function Cell({
         typeof cell.value === `number` && CELL_NUMBER_COLORS[cell.value],
         !cell.isOpened &&
           `bg-[#ccc] border-3 border-t-[#eee] border-l-[#eee] border-r-[#aaa] border-b-[#aaa] shadow-sm`,
+        !cell.isOpened && level.value === `easy` && `border-5`,
         cell.value === `mine` && cell.hightlight,
         level.value === `easy` && `w-16 h-16 text-4xl`,
         !cell.isOpened && `cursor-pointer`

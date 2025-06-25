@@ -9,8 +9,14 @@ export class Signal<T> {
     if (refresh) this.refresh = refresh
   }
 
-  bind() {
-    this.refresh = useRefresh()
+  bind(fn?: () => void) {
+    if (fn) {
+      const refresh = useRefresh()
+      this.refresh = () => {
+        fn()
+        refresh()
+      }
+    } else this.refresh = useRefresh()
   }
 
   get value() {

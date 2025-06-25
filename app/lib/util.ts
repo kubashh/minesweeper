@@ -1,4 +1,6 @@
-import { board, DIRECTIONS, minesLeft } from "./consts"
+import { getTimerRunning, resetTimer, startTimer } from "../components/Timer"
+import { board, DIRECTIONS, gameStatus, level, LEVELS, minesLeft } from "./consts"
+import { playSoundEffect } from "./sfx"
 
 export function nowS() {
   return performance.now() / 1000
@@ -119,4 +121,58 @@ export function refreshMinesLeft() {
     }
 
   minesLeft.value = mines
+}
+
+export function startNewGame(row?: number, col?: number) {
+  const currentLevel = LEVELS[level.value]
+
+  gameStatus.value = `playing`
+  resetTimer()
+
+  let newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
+  if (row && col) {
+    while (newBoard[row][col].value === `mine`) {
+      newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
+    }
+    openCell(row, col)
+  }
+  board.value = newBoard
+  refreshMinesLeft()
+}
+
+export function openCell(row: number, col: number) {
+  const isFirstTime = !getTimerRunning()
+
+  if (!getTimerRunning()) startTimer()
+
+  const cell = board.value[row][col]
+  const isMineCell = cell.value === `mine`
+  const isNumberCell = typeof cell.value && !!cell.value
+  const isEmptyCell = !cell.value
+
+  if (isMineCell) {
+    if (isFirstTime) return startNewGame(row, col)
+
+    playSoundEffect(`GAME_OVER`)
+    cell.isOpened = true
+    gameStatus.value = `lose`
+    cell.hightlight = `bg-[red]`
+    revealMines(false)
+  } else {
+    if (isNumberCell) {
+      playSoundEffect(`REVEAL_NUMBER`)
+      cell.isOpened = true
+    } else if (isEmptyCell) {
+      playSoundEffect(`REVEAL_EMPTY`)
+      revealEmptyCells(row, col)
+    }
+
+    if (checkGameWin(10)) {
+      playSoundEffect(`GAME_WIN`)
+      revealMines(true)
+      gameStatus.value = `win`
+    }
+  }
+
+  board.refresh?.()
 }
