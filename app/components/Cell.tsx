@@ -12,6 +12,8 @@ function handleCellLeftClick(cell: GameCell) {
 }
 
 function handleCellRightClick(row: number, col: number) {
+  console.log(`asdljfas`, minesLeft.value)
+
   if (gameStatus.value !== `playing` || board.value[row][col].isOpened) return
   if (minesLeft.value === 0 && !board.value[row][col].isFlagged) return
 
