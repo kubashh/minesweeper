@@ -7,7 +7,7 @@ import { level } from "./lib/consts"
 import { startNewGame } from "./lib/util"
 import { useClient } from "./lib/hooks"
 
-export function Game() {
+function Game() {
   level.bind(startNewGame)
 
   return (
@@ -20,7 +20,7 @@ export function Game() {
 }
 
 export default function Home() {
-  if (!useClient()) return <></>
+  if (!useClient()) return
 
   return <Game />
 }
