@@ -1,4 +1,4 @@
-import bombIcon from "@/public/icons/bomb.svg"
+import bombIcon from "@/res/icons/bomb.svg"
 import { gameStatus, minesLeft } from "../lib/consts"
 import { stopTimer } from "./Timer"
 
