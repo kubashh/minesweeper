@@ -4,14 +4,11 @@
 // Props
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
-type CellProps = {
-  cell: GameCell
-  rowIndex: number
-  colIndex: number
-}
+type CellProps = { cell: GameCell }
 
 // Game
 type TGameStatus = `playing` | `lose` | `win`
+
 type TLevel = `easy` | `medium` | `expert`
 
 // Cell
@@ -34,18 +31,12 @@ type NumberCell = {
   value: number
 }
 
-type EmptyCell = {
-  value: null
-  isFlagged: false
-  isOpened: false
-}
-
 type OpenedMineCell = OpenedCail & MineCell
 type ClosedMineCell = ClosedCell & MineCell
 type OpenedNumberCell = OpenedCail & NumberCell
 type ClosedNumberCell = ClosedCell & NumberCell
 
-type GameCell = OpenedMineCell | ClosedMineCell | OpenedNumberCell | ClosedNumberCell | EmptyCell
+type GameCell = OpenedMineCell | ClosedMineCell | OpenedNumberCell | ClosedNumberCell
 
 type TBoard = GameCell[][]
 

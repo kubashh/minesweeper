@@ -4,9 +4,9 @@ import { board } from "../lib/consts"
 export default function Board() {
   board.bind()
   return board.value.map((row, rowIndex) => (
-    <div key={rowIndex} className="flex">
+    <div className="flex" key={rowIndex}>
       {row.map((cell, colIndex) => (
-        <Cell key={colIndex} cell={cell} rowIndex={rowIndex} colIndex={colIndex} />
+        <Cell cell={cell} key={colIndex} />
       ))}
     </div>
   ))

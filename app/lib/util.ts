@@ -14,7 +14,7 @@ function createBoard(rows: number, cols: number) {
 
     for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
       board[rowIndex][cellIndex] = {
-        value: null,
+        value: 0,
         isFlagged: false,
         isOpened: false,
       }
@@ -172,7 +172,7 @@ export function openCell(cell: GameCell) {
       revealEmptyCells(cell)
     }
 
-    if (checkGameWin(10)) {
+    if (checkGameWin(LEVELS[level.value].totalMines)) {
       playSoundEffect(`GAME_WIN`)
       revealMines(true)
       gameStatus.value = `win`

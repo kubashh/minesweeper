@@ -11,13 +11,9 @@ function handleCellLeftClick(cell: GameCell) {
   openCell(cell)
 }
 
-function handleCellRightClick(row: number, col: number) {
-  console.log(`asdljfas`, minesLeft.value)
-
-  if (gameStatus.value !== `playing` || board.value[row][col].isOpened) return
-  if (minesLeft.value === 0 && !board.value[row][col].isFlagged) return
-
-  const cell = board.value[row][col]
+function handleCellRightClick(cell: GameCell) {
+  if (gameStatus.value !== `playing` || cell.isOpened) return
+  if (minesLeft.value === 0 && !cell.isFlagged) return
 
   if (cell.isFlagged) {
     playSoundEffect(`FLAG_REMOVE`)
@@ -31,7 +27,7 @@ function handleCellRightClick(row: number, col: number) {
   board.refresh?.()
 }
 
-export default function Cell({ cell, rowIndex, colIndex }: CellProps) {
+export default function Cell({ cell }: CellProps) {
   return (
     <div
       className={clsx(
@@ -45,7 +41,7 @@ export default function Cell({ cell, rowIndex, colIndex }: CellProps) {
         !cell.isOpened && `cursor-pointer`
       )}
       onClick={() => handleCellLeftClick(cell)}
-      onContextMenu={() => handleCellRightClick(rowIndex, colIndex)}
+      onContextMenu={() => handleCellRightClick(cell)}
     >
       {(cell.isOpened && typeof cell.value === `number` && cell.value) || ``}
       {cell.isOpened && cell.value === `mine` && <img className="w-[80%] h-[80%]" src={bombImage.src} />}
