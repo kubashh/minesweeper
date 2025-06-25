@@ -5,10 +5,10 @@ import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/
 import { openCell, refreshMinesLeft } from "../lib/util"
 import { playSoundEffect } from "../lib/sfx"
 
-function handleCellLeftClick(row: number, col: number) {
-  if (gameStatus.value === `lose` || board.value[row][col].isOpened || board.value[row][col].isFlagged) return
+function handleCellLeftClick(cell: GameCell) {
+  if (gameStatus.value === `lose` || cell.isOpened || cell.isFlagged) return
 
-  openCell(row, col)
+  openCell(cell)
 }
 
 function handleCellRightClick(row: number, col: number) {
@@ -26,7 +26,6 @@ function handleCellRightClick(row: number, col: number) {
   cell.isFlagged = !cell.isFlagged
 
   refreshMinesLeft()
-
   board.refresh?.()
 }
 
@@ -43,7 +42,7 @@ export default function Cell({ cell, rowIndex, colIndex }: CellProps) {
         level.value === `easy` && `w-16 h-16 text-4xl`,
         !cell.isOpened && `cursor-pointer`
       )}
-      onClick={() => handleCellLeftClick(rowIndex, colIndex)}
+      onClick={() => handleCellLeftClick(cell)}
       onContextMenu={() => handleCellRightClick(rowIndex, colIndex)}
     >
       {(cell.isOpened && typeof cell.value === `number` && cell.value) || ``}

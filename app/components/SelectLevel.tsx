@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import { level, LEVELS } from "../lib/consts"
 
 export default function SelectLevel() {
@@ -6,7 +7,10 @@ export default function SelectLevel() {
       {Object.keys(LEVELS).map((levelName) => (
         <li key={levelName}>
           <button
-            className="mt-2 px-4 py-1 bg-zinc-800 text-zinc-50 rounded-md cursor-pointer"
+            className={clsx(
+              `mt-2 px-4 py-1 text-zinc-50 font-semibold rounded-md cursor-pointer`,
+              level.value === levelName ? `bg-zinc-700` : `bg-zinc-900`
+            )}
             onClick={() => (level.value = levelName as TLevel)}
           >
             {levelName}

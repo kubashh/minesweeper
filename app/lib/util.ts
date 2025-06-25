@@ -28,7 +28,7 @@ function randIndex(max: number) {
   return Math.floor(Math.random() * max)
 }
 
-export function initBoard(rows: number, cols: number, totalMines: number) {
+export function initGame(rows: number, cols: number, totalMines: number) {
   const newBoard = createBoard(rows, cols)
 
   for (let mines = 0; mines < totalMines; ) {
@@ -61,16 +61,11 @@ export function initBoard(rows: number, cols: number, totalMines: number) {
   return newBoard
 }
 
-export function initGame(rows: number, cols: number, totalMines: number) {
-  return initBoard(rows, cols, totalMines)
-}
+export function revealEmptyCells(cell: GameCell) {
+  const queue: [number, number][] = [getRowCol(cell)]
 
-export function revealEmptyCells(row: number, col: number) {
-  const queue: [number, number][] = [[row, col]]
-
-  while (queue.length > 0) {
-    const n = queue.shift()
-    if (!n) return
+  let n: [number, number] | undefined
+  while ((n = queue.shift())) {
     const [currentRow, currentCol] = n
 
     const cell = board.value[currentRow][currentCol]
@@ -123,48 +118,58 @@ export function refreshMinesLeft() {
   minesLeft.value = mines
 }
 
-export function startNewGame(row?: number, col?: number) {
+export function startNewGame(cell?: GameCell) {
   const currentLevel = LEVELS[level.value]
 
   gameStatus.value = `playing`
   resetTimer()
 
   let newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
-  if (row && col) {
+  if (cell) {
+    const [row, col] = getRowCol(cell)
     while (newBoard[row][col].value === `mine`) {
       newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
     }
-    openCell(row, col)
+    openCell(board.value[row][col])
   }
   board.value = newBoard
   refreshMinesLeft()
 }
 
-export function openCell(row: number, col: number) {
+function getRowCol(cellToFind: GameCell): [number, number] {
+  let rowIndex = 0
+  for (const row of board.value) {
+    let colIndex = 0
+    for (const cell of row) {
+      if (cell === cellToFind) return [rowIndex, colIndex]
+      colIndex++
+    }
+    rowIndex++
+  }
+
+  throw Error(`No such cell!`)
+}
+
+export function openCell(cell: GameCell) {
   const isFirstTime = !getTimerRunning()
 
   if (!getTimerRunning()) startTimer()
 
-  const cell = board.value[row][col]
-  const isMineCell = cell.value === `mine`
-  const isNumberCell = typeof cell.value && !!cell.value
-  const isEmptyCell = !cell.value
-
-  if (isMineCell) {
-    if (isFirstTime) return startNewGame(row, col)
+  if (cell.value === `mine`) {
+    if (isFirstTime) return startNewGame(cell)
 
     playSoundEffect(`GAME_OVER`)
     cell.isOpened = true
-    gameStatus.value = `lose`
     cell.hightlight = `bg-[red]`
+    gameStatus.value = `lose`
     revealMines(false)
   } else {
-    if (isNumberCell) {
+    if (typeof cell.value && !!cell.value) {
       playSoundEffect(`REVEAL_NUMBER`)
       cell.isOpened = true
-    } else if (isEmptyCell) {
+    } else if (!cell.value) {
       playSoundEffect(`REVEAL_EMPTY`)
-      revealEmptyCells(row, col)
+      revealEmptyCells(cell)
     }
 
     if (checkGameWin(10)) {

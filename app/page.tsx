@@ -1,19 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import Header from "./components/Header"
 import Board from "./components/Board"
 import SelectLevel from "./components/SelectLevel"
-import Header from "./components/Header"
 import { level } from "./lib/consts"
 import { startNewGame } from "./lib/util"
+import { useClient } from "./lib/hooks"
 
-export default function Home() {
+export function Game() {
   level.bind(startNewGame)
-
-  const [isClient, setIsClient] = useState(false)
-  useEffect(() => setIsClient(true))
-
-  if (!isClient) return
 
   return (
     <main className="py-2 px-6 bg-[#ccc] rounded-2xl w-fit m-auto">
@@ -22,4 +17,10 @@ export default function Home() {
       <SelectLevel />
     </main>
   )
+}
+
+export default function Home() {
+  if (!useClient()) return
+
+  return <Game />
 }
