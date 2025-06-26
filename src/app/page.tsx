@@ -1,11 +1,11 @@
 "use client"
 
-import Header from "./components/Header"
-import Board from "./components/Board"
-import SelectLevel from "./components/SelectLevel"
-import { level } from "./lib/consts"
-import { startNewGame } from "./lib/util"
-import { useClient } from "./lib/hooks"
+import Header from "../components/Header"
+import Board from "../components/Board"
+import SelectLevel from "../components/SelectLevel"
+import { level } from "../lib/consts"
+import { startNewGame } from "../lib/util"
+import { useClient } from "../lib/hooks"
 
 function Game() {
   level.bind(startNewGame)
