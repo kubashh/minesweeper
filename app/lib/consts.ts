@@ -55,6 +55,4 @@ export const gameStatus = new Signal<TGameStatus>(`playing`)
 export const level = new Signal<TLevel>(`easy`)
 export const timer = new Signal(0)
 export const minesLeft = new Signal(LEVELS.easy.totalMines)
-export const board = new Signal<TBoard>(
-  initGame(LEVELS[level.value].rows, LEVELS[level.value].cols, LEVELS[level.value].totalMines)
-)
+export const board = new Signal<TBoard>(initGame())

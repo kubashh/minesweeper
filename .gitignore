@@ -1,11 +1,9 @@
 # dependencies
 /node_modules
 
-# next.js
-/.next
-
 # production
 /dist
 
-# typescript
+# next.js
+/.next
 next-env.d.ts

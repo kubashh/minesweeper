@@ -6,14 +6,16 @@ export function nowS() {
   return performance.now() / 1000
 }
 
-function createBoard(rows: number, cols: number) {
-  const board: TBoard = []
+function createBoard() {
+  const { rows, cols } = LEVELS[level.value]
+
+  const newBoard: TBoard = []
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-    board[rowIndex] = []
+    newBoard[rowIndex] = []
 
     for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
-      board[rowIndex][cellIndex] = {
+      newBoard[rowIndex][cellIndex] = {
         value: 0,
         isFlagged: false,
         isOpened: false,
@@ -21,15 +23,16 @@ function createBoard(rows: number, cols: number) {
     }
   }
 
-  return board
+  return newBoard
 }
 
 function randIndex(max: number) {
   return Math.floor(Math.random() * max)
 }
 
-export function initGame(rows: number, cols: number, totalMines: number) {
-  const newBoard = createBoard(rows, cols)
+export function initGame() {
+  const { rows, cols, totalMines } = LEVELS[level.value]
+  const newBoard = createBoard()
 
   for (let mines = 0; mines < totalMines; ) {
     const row = randIndex(rows)
@@ -98,58 +101,6 @@ export function revealMines(highlightWin?: boolean) {
       }
 }
 
-export function checkGameWin(totalMines: number) {
-  let unopenedCells = 0
-
-  for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++
-
-  return unopenedCells === totalMines
-}
-
-export function refreshMinesLeft() {
-  let mines = 0
-
-  for (const row of board.value)
-    for (const cell of row) {
-      if (cell.value === `mine`) mines++
-      if (cell.isFlagged) mines--
-    }
-
-  minesLeft.value = mines
-}
-
-export function startNewGame(cell?: GameCell) {
-  const currentLevel = LEVELS[level.value]
-
-  gameStatus.value = `playing`
-  resetTimer()
-
-  let newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
-  if (cell) {
-    const [row, col] = getRowCol(cell)
-    while (newBoard[row][col].value === `mine`) {
-      newBoard = initGame(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
-    }
-    openCell(board.value[row][col])
-  }
-  board.value = newBoard
-  refreshMinesLeft()
-}
-
-function getRowCol(cellToFind: GameCell): [number, number] {
-  let rowIndex = 0
-  for (const row of board.value) {
-    let colIndex = 0
-    for (const cell of row) {
-      if (cell === cellToFind) return [rowIndex, colIndex]
-      colIndex++
-    }
-    rowIndex++
-  }
-
-  throw Error(`No such cell!`)
-}
-
 export function openCell(cell: GameCell) {
   const isFirstTime = !getTimerRunning()
 
@@ -172,7 +123,7 @@ export function openCell(cell: GameCell) {
       revealEmptyCells(cell)
     }
 
-    if (checkGameWin(LEVELS[level.value].totalMines)) {
+    if (checkGameWin()) {
       playSoundEffect(`GAME_WIN`)
       revealMines(true)
       gameStatus.value = `win`
@@ -180,4 +131,57 @@ export function openCell(cell: GameCell) {
   }
 
   board.refresh?.()
+}
+
+export function checkGameWin() {
+  let unopenedCells = 0
+
+  for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++
+
+  return unopenedCells === LEVELS[level.value].totalMines
+}
+
+export function refreshMinesLeft() {
+  let mines = 0
+
+  for (const row of board.value)
+    for (const cell of row) {
+      if (cell.value === `mine`) mines++
+      if (cell.isFlagged) mines--
+    }
+
+  minesLeft.value = mines
+}
+
+function getValidBoard(row: number, col: number) {
+  let newBoard = initGame()
+  while (newBoard[row][col].value === `mine`) {
+    newBoard = initGame()
+  }
+
+  return newBoard
+}
+
+export function startNewGame(cell?: GameCell) {
+  if (cell) {
+    const [row, col] = getRowCol(cell)
+    board.value = getValidBoard(row, col)
+    setTimeout(() => openCell(board.value[row][col]))
+  } else {
+    board.value = initGame()
+  }
+
+  gameStatus.value = `playing`
+  resetTimer()
+  refreshMinesLeft()
+}
+
+function getRowCol(cellToFind: GameCell): [number, number] {
+  const { rows, cols } = LEVELS[level.value]
+  for (let row = 0; row < rows; row++)
+    for (let col = 0; col < cols; col++) {
+      if (board.value[row][col] === cellToFind) return [row, col]
+    }
+
+  throw Error(`No such cell!`)
 }

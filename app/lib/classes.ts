@@ -1,12 +1,17 @@
-import { useRefresh } from "./hooks"
+import { useState } from "react"
+
+function useRefresh() {
+  const f = useState(false)[1]
+  return () => f((prev) => !prev)
+}
 
 export class Signal<T> {
   v: T
   refresh: (() => void) | undefined
 
-  constructor(v: T, refresh?: () => void) {
+  constructor(v: T, bind?: boolean) {
     this.v = v
-    if (refresh) this.refresh = refresh
+    if (bind) this.refresh = useRefresh()
   }
 
   bind(fn?: () => void) {
