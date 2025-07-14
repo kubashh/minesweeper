@@ -12,7 +12,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <link rel="icon" href="/minesweeper/favicon.png" />
       </head>
-      <body className="w-screen h-screen justify-center content-center bg-zinc-950 text-zinc-900 select-none">
+      <body className="w-screen h-screen justify-center content-center bg-black text-zinc-950 select-none">
         {children}
       </body>
     </html>

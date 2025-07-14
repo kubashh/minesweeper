@@ -11,7 +11,7 @@ function Game() {
   level.bind(startNewGame)
 
   return (
-    <main className="py-2 px-6 bg-[#ccc] rounded-2xl w-fit m-auto">
+    <main className="py-2 px-6 bg-zinc-300 rounded-2xl w-fit m-auto">
       <Header />
       <Board />
       <SelectLevel />

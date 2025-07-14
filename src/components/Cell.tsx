@@ -34,7 +34,7 @@ export default function Cell({ cell }: CellProps) {
         `w-9 h-9 border-1 border-zinc-600 flex justify-center items-center text-2xl font-bold cursor-default relative`,
         typeof cell.value === `number` && CELL_NUMBER_COLORS[cell.value],
         !cell.isOpened &&
-          `bg-[#ccc] border-3 border-t-[#eee] border-l-[#eee] border-r-[#aaa] border-b-[#aaa] shadow-sm`,
+          `bg-zinc-300 border-3 border-t-zinc-200 border-l-zinc-200 border-r-zinc-400 border-b-zinc-400 shadow-sm`,
         !cell.isOpened && level.value === `easy` && `border-5`,
         cell.value === `mine` && cell.hightlight,
         level.value === `easy` && `w-16 h-16 text-4xl`,
