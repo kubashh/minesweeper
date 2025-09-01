@@ -53,7 +53,8 @@ export function initGame() {
           const newRow = rowIndex + dRow
           const newCol = colIndex + dCol
 
-          if (newRow in newBoard && newCol in row && newBoard[newRow][newCol].value === `mine`) minesAround++
+          if (newRow in newBoard && newCol in row && newBoard[newRow][newCol].value === `mine`)
+            minesAround++
         })
 
         if (minesAround > 0) cell.value = minesAround

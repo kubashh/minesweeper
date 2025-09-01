@@ -1,6 +1,4 @@
 {
-  "name": "minesweeper",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "clear && next dev --turbopack",
@@ -22,6 +20,6 @@
   },
   "prettier": {
     "semi": false,
-    "printWidth": 112
+    "printWidth": 108
   }
 }
