@@ -2,22 +2,22 @@
   "version": "2.0.1",
   "private": true,
   "scripts": {
-    "dev": "clear && next dev --turbopack",
-    "build": "next build"
+    "dev": "clear && bun --bun run next dev --turbopack",
+    "build": "next build --turbopack"
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "next": "15.3.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "15.5.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "typescript": "^5.9.2",
+    "@types/node": "^20.19.11",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@tailwindcss/postcss": "^4.1.12",
+    "tailwindcss": "^4.1.12"
   },
   "prettier": {
     "semi": false,
