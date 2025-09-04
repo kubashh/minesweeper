@@ -1,4 +1,4 @@
-import { Signal } from "./classes"
+import { signal } from "./signals"
 import { initGame } from "./util"
 
 export const CELL_NUMBER_COLORS = [
@@ -51,8 +51,8 @@ export const SOUNDS = {
   GAME_WIN: "gameWin.wav",
 }
 
-export const gameStatus = new Signal<TGameStatus>(`playing`)
-export const level = new Signal<TLevel>(`easy`)
-export const timer = new Signal(0)
-export const minesLeft = new Signal(LEVELS.easy.totalMines)
-export const board = new Signal<TBoard>(initGame())
+export const gameStatus = signal<TGameStatus>(`playing`)
+export const level = signal<TLevel>(`easy`)
+export const timer = signal(0)
+export const minesLeft = signal(LEVELS.easy.totalMines)
+export const board = signal<TBoard>(initGame())

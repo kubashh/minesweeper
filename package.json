@@ -2,7 +2,7 @@
   "version": "2.0.1",
   "private": true,
   "scripts": {
-    "dev": "clear && bun --bun run next dev --turbopack",
+    "dev": "clear && bun run next dev --turbopack",
     "build": "next build --turbopack"
   },
   "dependencies": {
@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.2",
-    "@types/node": "^20.19.11",
+    "@types/node": "^20.19.13",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@tailwindcss/postcss": "^4.1.12",
