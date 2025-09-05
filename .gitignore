@@ -1,9 +1,4 @@
-# dependencies
-/node_modules
-
-# production
-/dist
-
-# next.js
-/.next
+node_modules
+dist
+.next
 next-env.d.ts
