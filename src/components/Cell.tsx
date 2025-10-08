@@ -3,7 +3,7 @@ import bombImage from "@/public/icons/bomb.svg"
 import flagImage from "@/public/icons/redFlag.png"
 import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts"
 import { openCell, refreshMinesLeft } from "../lib/util"
-import { playSoundEffect } from "../lib/sfx"
+import { sounds } from "../lib/sfx"
 
 function handleCellLeftClick(cell: GameCell) {
   if (gameStatus.value === `lose` || cell.isOpened || cell.isFlagged) return
@@ -15,11 +15,8 @@ function handleCellRightClick(cell: GameCell) {
   if (gameStatus.value !== `playing` || cell.isOpened) return
   if (minesLeft.value === 0 && !cell.isFlagged) return
 
-  if (cell.isFlagged) {
-    playSoundEffect(`FLAG_REMOVE`)
-  } else {
-    playSoundEffect(`FLAG_REMOVE`)
-  }
+  if (cell.isFlagged) sounds.FLAG_PLACE.play()
+  else sounds.FLAG_REMOVE.play()
 
   cell.isFlagged = !cell.isFlagged
 
@@ -31,13 +28,13 @@ export default function Cell({ cell }: CellProps) {
   return (
     <div
       className={clsx(
-        `w-9 h-9 border-1 border-zinc-600 flex justify-center items-center text-2xl font-bold cursor-default relative`,
+        `w-[4.5vh] h-[4.5vh] border-1 border-zinc-600 flex justify-center items-center text-[3vh] font-bold cursor-default relative`,
         typeof cell.value === `number` && CELL_NUMBER_COLORS[cell.value],
         !cell.isOpened &&
-          `bg-zinc-300 border-3 border-t-zinc-200 border-l-zinc-200 border-r-zinc-400 border-b-zinc-400 shadow-sm`,
-        !cell.isOpened && level.value === `easy` && `border-5`,
+          `bg-zinc-300 border-4 border-t-zinc-200 border-l-zinc-200 border-r-zinc-400 border-b-zinc-400 shadow-sm`,
+        !cell.isOpened && level.value === `easy` && `border-6`,
         cell.value === `mine` && cell.hightlight,
-        level.value === `easy` && `w-16 h-16 text-4xl`,
+        level.value === `easy` && `w-[8vh] h-[8vh] text-[5.33vh]`,
         !cell.isOpened && `cursor-pointer`
       )}
       onClick={() => handleCellLeftClick(cell)}

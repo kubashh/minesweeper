@@ -1,6 +1,6 @@
 import { getTimerRunning, resetTimer, startTimer } from "../components/Timer"
 import { board, DIRECTIONS, gameStatus, level, LEVELS, minesLeft } from "./consts"
-import { playSoundEffect } from "./sfx"
+import { sounds } from "./sfx"
 
 export function nowS() {
   return performance.now() / 1000
@@ -110,22 +110,22 @@ export function openCell(cell: GameCell) {
   if (cell.value === `mine`) {
     if (isFirstTime) return startNewGame(cell)
 
-    playSoundEffect(`GAME_OVER`)
+    sounds.GAME_OVER.play()
     cell.isOpened = true
     cell.hightlight = `bg-[red]`
     gameStatus.value = `lose`
     revealMines(false)
   } else {
     if (typeof cell.value && !!cell.value) {
-      playSoundEffect(`REVEAL_NUMBER`)
+      sounds.REVEAL_NUMBER.play()
       cell.isOpened = true
     } else if (!cell.value) {
-      playSoundEffect(`REVEAL_EMPTY`)
+      sounds.REVEAL_EMPTY.play()
       revealEmptyCells(cell)
     }
 
     if (checkGameWin()) {
-      playSoundEffect(`GAME_WIN`)
+      sounds.GAME_WIN.play()
       revealMines(true)
       gameStatus.value = `win`
     }

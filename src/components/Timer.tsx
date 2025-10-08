@@ -26,7 +26,7 @@ export function stopTimer() {
 }
 
 export function resetTimer() {
-  timeStarted = 0
+  timer.value = timeStarted = 0
   running = false
 }
 
