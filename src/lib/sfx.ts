@@ -18,15 +18,8 @@ function loadSFX() {
     }
   }
 
-  const SOUNDS = {
-    REVEAL_EMPTY: "revealEmpty.wav",
-    REVEAL_NUMBER: "revealNumber.wav",
-    FLAG_PLACE: "flagPlace.wav",
-    FLAG_REMOVE: "flagRemove.wav",
-    GAME_OVER: "gameOver.wav",
-    GAME_WIN: "gameWin.wav",
-  }
+  const SOUNDS = [`revealEmpty`, `revealNumber`, `flagPlace`, `flagRemove`, `gameOver`, `gameWin`]
 
-  for (const sound in SOUNDS)
-    sounds[sound as TSoundName] = new NewAudio(`${location.pathname}/sfx/${SOUNDS[sound as TSoundName]}`)
+  for (const sound of SOUNDS)
+    sounds[sound as TSoundName] = new NewAudio(`${location.pathname}/sfx/${sound}.wav`)
 }

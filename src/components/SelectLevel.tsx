@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { level, LEVELS } from "../lib/consts"
+import { game, level, LEVELS } from "../lib/consts"
 
 export default function SelectLevel() {
   return (
@@ -11,7 +11,10 @@ export default function SelectLevel() {
               `mt-2 px-4 py-1 text-zinc-50 font-semibold rounded-md cursor-pointer`,
               level.value === levelName ? `bg-zinc-700` : `bg-zinc-900`
             )}
-            onClick={() => (level.value = levelName as TLevel)}
+            onClick={() => {
+              Object.assign(game, LEVELS[levelName as TLevel])
+              level.value = levelName as TLevel
+            }}
           >
             {levelName}
           </button>

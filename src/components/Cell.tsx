@@ -15,8 +15,8 @@ function handleCellRightClick(cell: GameCell) {
   if (gameStatus.value !== `playing` || cell.isOpened) return
   if (minesLeft.value === 0 && !cell.isFlagged) return
 
-  if (cell.isFlagged) sounds.FLAG_PLACE.play()
-  else sounds.FLAG_REMOVE.play()
+  if (cell.isFlagged) sounds.flagPlace.play()
+  else sounds.flagRemove.play()
 
   cell.isFlagged = !cell.isFlagged
 

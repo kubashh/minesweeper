@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "scripts": {
     "dev": "clear && bun run next dev",
     "build": "next build"
@@ -11,7 +11,6 @@
     "react-dom": "latest"
   },
   "devDependencies": {
-    "babel-plugin-react-compiler": "1.0.0",
     "typescript": "latest",
     "@types/node": "latest",
     "@types/react": "latest",

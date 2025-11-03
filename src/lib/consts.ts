@@ -42,21 +42,13 @@ export const LEVELS = {
   },
 }
 
-export const SOUNDS = {
-  REVEAL_EMPTY: "revealEmpty.wav",
-  REVEAL_NUMBER: "revealNumber.wav",
-  FLAG_PLACE: "flagPlace.wav",
-  FLAG_REMOVE: "flagRemove.wav",
-  GAME_OVER: "gameOver.wav",
-  GAME_WIN: "gameWin.wav",
-}
-
 export const game = {
   isFirstTime: true,
+  ...LEVELS.easy,
 }
 
 export const gameStatus = signal<TGameStatus>(`playing`)
 export const level = signal<TLevel>(`easy`)
 export const timer = signal(0)
-export const minesLeft = signal(LEVELS.easy.totalMines)
+export const minesLeft = signal(game.totalMines)
 export const board = signal<TBoard>(createBoard())

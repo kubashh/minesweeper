@@ -3,6 +3,9 @@
 
 module "*.css" {}
 
+// Simple
+type Point = [number, number]
+
 // Props
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
@@ -43,6 +46,6 @@ type GameCell = OpenedMineCell | ClosedMineCell | OpenedNumberCell | ClosedNumbe
 type TBoard = GameCell[][]
 
 // Sounds
-type TSoundName = `REVEAL_EMPTY` | `REVEAL_NUMBER` | `FLAG_PLACE` | `FLAG_REMOVE` | `GAME_OVER` | `GAME_WIN`
+type TSoundName = `revealEmpty` | `revealNumber` | `flagPlace` | `flagRemove` | `gameOver` | `gameWin`
 
 type TSoundList = Record<TSoundName, HTMLAudioElement>

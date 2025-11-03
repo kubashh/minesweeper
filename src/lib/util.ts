@@ -1,5 +1,5 @@
 import { resetTimer, startTimer } from "../components/Timer"
-import { board, DIRECTIONS, game, gameStatus, level, LEVELS, minesLeft } from "./consts"
+import { board, DIRECTIONS, game, gameStatus, minesLeft } from "./consts"
 import { sounds } from "./sfx"
 
 export function startNewGame(cell?: GameCell) {
@@ -24,32 +24,20 @@ export function createBoard() {
   return newBoard
 }
 
-function createEmptyBoard() {
-  const { rows, cols } = LEVELS[level.value]
-
-  const newBoard: TBoard = []
-
-  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-    newBoard[rowIndex] = []
-
-    for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
-      newBoard[rowIndex][cellIndex] = {
-        value: 0,
-        isFlagged: false,
-        isOpened: false,
-      }
-    }
-  }
-
-  return newBoard
+function createEmptyBoard(): TBoard {
+  return Array.from({ length: game.rows }, () =>
+    Array.from({ length: game.cols }, () => ({
+      value: 0,
+      isFlagged: false,
+      isOpened: false,
+    }))
+  )
 }
 
 function fillBoardMines(newBoard: TBoard) {
-  const { rows, cols, totalMines } = LEVELS[level.value]
-
-  for (let mines = 0; mines < totalMines; ) {
-    const row = randIndex(rows)
-    const col = randIndex(cols)
+  for (let mines = 0; mines < game.totalMines; ) {
+    const row = randIndex(game.rows)
+    const col = randIndex(game.cols)
 
     if (newBoard[row][col].value !== `mine`) {
       ;(newBoard[row][col] as GameCell).value = `mine`
@@ -61,12 +49,12 @@ function fillBoardMines(newBoard: TBoard) {
 }
 
 function fillBoardNumbers(newBoard: TBoard) {
-  newBoard.forEach((row, rowIndex) => {
-    row.forEach((cell, colIndex) => {
+  newBoard.map((row, rowIndex) => {
+    row.map((cell, colIndex) => {
       if (cell.value !== `mine`) {
         let minesAround = 0
 
-        DIRECTIONS.forEach(([dRow, dCol]) => {
+        DIRECTIONS.map(([dRow, dCol]) => {
           const newRow = rowIndex + dRow
           const newCol = colIndex + dCol
 
@@ -83,9 +71,9 @@ function fillBoardNumbers(newBoard: TBoard) {
 }
 
 export function revealEmptyCells(cell: GameCell) {
-  const queue: [number, number][] = [getRowCol(cell)]
+  const queue: Point[] = [getRowCol(cell)]
 
-  let n: [number, number] | undefined
+  let n: Point | undefined
   while ((n = queue.shift())) {
     const [currentRow, currentCol] = n
 
@@ -125,22 +113,22 @@ export function openCell(cell: GameCell) {
   if (cell.value === `mine`) {
     if (game.isFirstTime) return startNewGame(cell)
 
-    sounds.GAME_OVER.play()
+    sounds.gameOver.play()
     cell.isOpened = true
     cell.hightlight = `bg-[red]`
     gameStatus.value = `lose`
     revealMines(false)
   } else {
     if (typeof cell.value && !!cell.value) {
-      sounds.REVEAL_NUMBER.play()
+      sounds.revealNumber.play()
       cell.isOpened = true
     } else if (!cell.value) {
-      sounds.REVEAL_EMPTY.play()
+      sounds.revealEmpty.play()
       revealEmptyCells(cell)
     }
 
     if (checkGameWin()) {
-      sounds.GAME_WIN.play()
+      sounds.gameWin.play()
       revealMines(true)
       gameStatus.value = `win`
     }
@@ -155,7 +143,7 @@ export function checkGameWin() {
 
   for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++
 
-  return unopenedCells === LEVELS[level.value].totalMines
+  return unopenedCells === game.totalMines
 }
 
 export function refreshMinesLeft() {
@@ -171,22 +159,16 @@ export function refreshMinesLeft() {
 }
 
 function getValidBoard(row: number, col: number) {
-  let newBoard = createBoard()
-  while (newBoard[row][col].value === `mine`) {
-    newBoard = createBoard()
-  }
+  let newBoard
+  do newBoard = createBoard()
+  while (newBoard[row][col].value === `mine`)
 
   return newBoard
 }
 
-function getRowCol(cellToFind: GameCell): [number, number] {
-  const { rows, cols } = LEVELS[level.value]
-  for (let row = 0; row < rows; row++)
-    for (let col = 0; col < cols; col++) {
-      if (board.value[row][col] === cellToFind) return [row, col]
-    }
-
-  throw Error(`No such cell!`)
+function getRowCol(cellToFind: GameCell): Point {
+  const i = board.value.flat().findIndex((cell) => cell === cellToFind)
+  return [Math.floor(i / game.cols), i % game.cols]
 }
 
 export function nowS() {
