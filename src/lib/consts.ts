@@ -1,5 +1,5 @@
 import { signal } from "./signals"
-import { initGame } from "./util"
+import { createBoard } from "./util"
 
 export const CELL_NUMBER_COLORS = [
   null,
@@ -51,8 +51,12 @@ export const SOUNDS = {
   GAME_WIN: "gameWin.wav",
 }
 
+export const game = {
+  isFirstTime: true,
+}
+
 export const gameStatus = signal<TGameStatus>(`playing`)
 export const level = signal<TLevel>(`easy`)
 export const timer = signal(0)
 export const minesLeft = signal(LEVELS.easy.totalMines)
-export const board = signal<TBoard>(initGame())
+export const board = signal<TBoard>(createBoard())

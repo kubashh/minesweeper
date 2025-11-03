@@ -28,7 +28,7 @@ export default function Cell({ cell }: CellProps) {
   return (
     <div
       className={clsx(
-        `w-[4.5vh] h-[4.5vh] border-1 border-zinc-600 flex justify-center items-center text-[3vh] font-bold cursor-default relative`,
+        `w-[4.5vh] h-[4.5vh] border border-zinc-600 flex justify-center items-center text-[3vh] font-bold cursor-default relative`,
         typeof cell.value === `number` && CELL_NUMBER_COLORS[cell.value],
         !cell.isOpened &&
           `bg-zinc-300 border-4 border-t-zinc-200 border-l-zinc-200 border-r-zinc-400 border-b-zinc-400 shadow-sm`,

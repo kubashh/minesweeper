@@ -1,9 +1,8 @@
 {
-  "version": "2.1.0",
-  "private": true,
+  "version": "2.2.0",
   "scripts": {
-    "dev": "clear && bun run next dev --turbopack",
-    "build": "next build --turbopack"
+    "dev": "clear && bun run next dev",
+    "build": "next build"
   },
   "dependencies": {
     "clsx": "latest",
@@ -12,6 +11,7 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "babel-plugin-react-compiler": "1.0.0",
     "typescript": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
