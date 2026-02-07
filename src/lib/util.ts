@@ -30,7 +30,7 @@ function createEmptyBoard(): TBoard {
       value: 0,
       isFlagged: false,
       isOpened: false,
-    }))
+    })),
   )
 }
 

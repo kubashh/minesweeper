@@ -3,10 +3,10 @@ import "./index.css"
 
 export const metadata: Metadata = {
   title: `Minesweeper`,
-  description: `Play Minesweeper free, no ads!`,
+  description: `Play Minesweeper game for free, no ads!`,
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>

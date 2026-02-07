@@ -35,7 +35,7 @@ export default function Cell({ cell }: CellProps) {
         !cell.isOpened && level.value === `easy` && `border-6`,
         cell.value === `mine` && cell.hightlight,
         level.value === `easy` && `w-[8vh] h-[8vh] text-[5.33vh]`,
-        !cell.isOpened && `cursor-pointer`
+        !cell.isOpened && `cursor-pointer`,
       )}
       onClick={() => handleCellLeftClick(cell)}
       onContextMenu={() => handleCellRightClick(cell)}

@@ -1,22 +1,22 @@
 {
-  "version": "2.3.0",
+  "name": "minesweeper",
+  "version": "2.3.1",
   "scripts": {
     "dev": "clear && bun run next dev",
     "build": "next build"
   },
   "dependencies": {
-    "clsx": "latest",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "clsx": "^2.1.1",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "typescript": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@tailwindcss/postcss": "latest",
-    "tailwindcss": "latest"
+    "typescript": "^5.9.3",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "@tailwindcss/postcss": "^4.1.18",
+    "tailwindcss": "^4.1.18"
   },
   "prettier": {
     "semi": false,

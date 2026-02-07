@@ -7,8 +7,6 @@ module "*.css" {}
 type Point = [number, number]
 
 // Props
-type RootLayoutProps = Readonly<{ children: React.ReactNode }>
-
 type CellProps = { cell: GameCell }
 
 // Game

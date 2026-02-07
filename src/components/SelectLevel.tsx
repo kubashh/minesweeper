@@ -9,7 +9,7 @@ export default function SelectLevel() {
           <button
             className={clsx(
               `mt-2 px-4 py-1 text-zinc-50 font-semibold rounded-md cursor-pointer`,
-              level.value === levelName ? `bg-zinc-700` : `bg-zinc-900`
+              level.value === levelName ? `bg-zinc-700` : `bg-zinc-900`,
             )}
             onClick={() => {
               Object.assign(game, LEVELS[levelName as TLevel])
