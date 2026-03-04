@@ -1,11 +1,18 @@
 import clsx from "clsx";
 import bombImage from "@/public/icons/bomb.svg";
 import flagImage from "@/public/icons/redFlag.png";
-import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts";
+import {
+  boardRefresh,
+  CELL_NUMBER_COLORS,
+  gameStatusSignal,
+  levelSignal,
+  minesLeftSignal,
+} from "../lib/consts";
 import { openCell, refreshMinesLeft } from "../lib/util";
 import { sounds } from "../lib/sfx";
 
 export default function Cell({ cell }: CellProps) {
+  const level = levelSignal.use();
   return (
     <div
       className={clsx(
@@ -13,9 +20,9 @@ export default function Cell({ cell }: CellProps) {
         typeof cell.value === `number` && CELL_NUMBER_COLORS[cell.value],
         !cell.isOpened &&
           `bg-zinc-300 border-4 border-t-zinc-200 border-l-zinc-200 border-r-zinc-400 border-b-zinc-400 shadow-sm`,
-        !cell.isOpened && level.value === `easy` && `border-6`,
+        !cell.isOpened && level === `easy` && `border-6`,
         cell.value === `mine` && cell.hightlight,
-        level.value === `easy` && `w-[8vh] h-[8vh] text-[5.33vh]`,
+        level === `easy` && `w-[8vh] h-[8vh] text-[5.33vh]`,
         !cell.isOpened && `cursor-pointer`,
       )}
       onClick={() => handleCellLeftClick(cell)}
@@ -29,14 +36,14 @@ export default function Cell({ cell }: CellProps) {
 }
 
 function handleCellLeftClick(cell: GameCell) {
-  if (gameStatus.value === `lose` || cell.isOpened || cell.isFlagged) return;
+  if (gameStatusSignal.get() === `lose` || cell.isOpened || cell.isFlagged) return;
 
   openCell(cell);
 }
 
 function handleCellRightClick(cell: GameCell) {
-  if (gameStatus.value !== `playing` || cell.isOpened) return;
-  if (minesLeft.value === 0 && !cell.isFlagged) return;
+  if (gameStatusSignal.get() !== `playing` || cell.isOpened) return;
+  if (minesLeftSignal.get() === 0 && !cell.isFlagged) return;
 
   if (cell.isFlagged) sounds.flagPlace.play();
   else sounds.flagRemove.play();
@@ -44,5 +51,5 @@ function handleCellRightClick(cell: GameCell) {
   cell.isFlagged = !cell.isFlagged;
 
   refreshMinesLeft();
-  board.refresh?.();
+  boardRefresh.refresh();
 }

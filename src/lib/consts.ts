@@ -1,4 +1,4 @@
-import { signal } from "./signals";
+import { createSignal } from "wdwh/signal";
 import { createBoard } from "./util";
 
 export const CELL_NUMBER_COLORS = [
@@ -47,8 +47,9 @@ export const game = {
   ...LEVELS.easy,
 };
 
-export const gameStatus = signal<TGameStatus>(`playing`);
-export const level = signal<TLevel>(`easy`);
-export const timer = signal(0);
-export const minesLeft = signal(game.totalMines);
-export const board = signal<TBoard>(createBoard());
+export const gameStatusSignal = createSignal<TGameStatus>(`playing`);
+export const levelSignal = createSignal<TLevel>(`easy`);
+export const timerSignal = createSignal(0);
+export const minesLeftSignal = createSignal(game.totalMines);
+export const boardRefresh = { refresh() {} };
+export const board = createBoard();

@@ -26,11 +26,9 @@ class Sig<T> {
   }
   set value(v: T) {
     this.v = v;
-    this.refresh?.();
+    this.refresh();
   }
 }
-
-export type Signal<T> = Sig<T>;
 
 export function signal<T>(v: T) {
   return new Sig(v);

@@ -18,7 +18,7 @@
     "@types/react-dom": "^19.2.3",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
-    "wdwh": "^1.12.9"
+    "wdwh": "^1.12.11"
   },
   "prettier": {
     "printWidth": 108

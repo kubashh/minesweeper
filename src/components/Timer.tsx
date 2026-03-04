@@ -1,5 +1,5 @@
 import timerImage from "@/public/icons/timer.svg";
-import { timer } from "../lib/consts";
+import { timerSignal } from "../lib/consts";
 import { nowS } from "../lib/util";
 
 let timeStarted = 0;
@@ -15,9 +15,9 @@ export function startTimer(upd?: boolean) {
 
   const realDiff = nowS() - timeStarted;
 
-  timer.value = Math.floor(realDiff);
+  timerSignal.set(Math.floor(realDiff));
 
-  setTimeout(() => startTimer(true), (timer.value - realDiff + 1) * 1000);
+  setTimeout(() => startTimer(true), (timerSignal.get() - realDiff + 1) * 1000);
 }
 
 export function stopTimer() {
@@ -25,14 +25,14 @@ export function stopTimer() {
 }
 
 export function resetTimer() {
-  timer.value = timeStarted = 0;
+  timeStarted = 0;
+  timerSignal.set(0);
   running = false;
 }
 
 export default function Timer() {
-  timer.bind();
   return (
-    <div className="flex items-center text-2xl">
+    <div className="flex items-center text-2xl justify-self-end">
       <img width="40" height="40" src={timerImage.src} />
       {timeToString()}
     </div>
@@ -40,8 +40,9 @@ export default function Timer() {
 }
 
 function timeToString() {
-  const minutes = Math.floor(timer.value / 60);
-  const seconds = timer.value % 60;
+  const timer = timerSignal.use();
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
 
   return `${minutes.toString().padStart(2, `0`)}:${seconds.toString().padStart(2, `0`)}`;
 }
