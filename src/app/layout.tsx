@@ -1,10 +1,10 @@
-import type { Metadata } from "next"
-import "./index.css"
+import type { Metadata } from "next";
+import "./index.css";
 
 export const metadata: Metadata = {
   title: `Minesweeper`,
   description: `Play Minesweeper game for free, no ads!`,
-}
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,5 +16,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
       </body>
     </html>
-  )
+  );
 }

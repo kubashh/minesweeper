@@ -1,27 +1,27 @@
-import { resetTimer, startTimer } from "../components/Timer"
-import { board, DIRECTIONS, game, gameStatus, minesLeft } from "./consts"
-import { sounds } from "./sfx"
+import { resetTimer, startTimer } from "../components/Timer";
+import { board, DIRECTIONS, game, gameStatus, minesLeft } from "./consts";
+import { sounds } from "./sfx";
 
 export function startNewGame(cell?: GameCell) {
   if (cell) {
-    const [row, col] = getRowCol(cell)
-    board.value = getValidBoard(row, col)
-    setTimeout(() => openCell(board.value[row][col]))
+    const [row, col] = getRowCol(cell);
+    board.value = getValidBoard(row, col);
+    setTimeout(() => openCell(board.value[row][col]));
   } else {
-    board.value = createBoard()
+    board.value = createBoard();
   }
 
-  game.isFirstTime = true
-  gameStatus.value = `playing`
-  resetTimer()
-  refreshMinesLeft()
+  game.isFirstTime = true;
+  gameStatus.value = `playing`;
+  resetTimer();
+  refreshMinesLeft();
 }
 
 export function createBoard() {
-  let newBoard = createEmptyBoard()
-  newBoard = fillBoardMines(newBoard)
-  newBoard = fillBoardNumbers(newBoard)
-  return newBoard
+  let newBoard = createEmptyBoard();
+  newBoard = fillBoardMines(newBoard);
+  newBoard = fillBoardNumbers(newBoard);
+  return newBoard;
 }
 
 function createEmptyBoard(): TBoard {
@@ -31,59 +31,59 @@ function createEmptyBoard(): TBoard {
       isFlagged: false,
       isOpened: false,
     })),
-  )
+  );
 }
 
 function fillBoardMines(newBoard: TBoard) {
   for (let mines = 0; mines < game.totalMines; ) {
-    const row = randIndex(game.rows)
-    const col = randIndex(game.cols)
+    const row = randIndex(game.rows);
+    const col = randIndex(game.cols);
 
     if (newBoard[row][col].value !== `mine`) {
-      ;(newBoard[row][col] as GameCell).value = `mine`
-      mines++
+      (newBoard[row][col] as GameCell).value = `mine`;
+      mines++;
     }
   }
 
-  return newBoard
+  return newBoard;
 }
 
 function fillBoardNumbers(newBoard: TBoard) {
   newBoard.map((row, rowIndex) => {
     row.map((cell, colIndex) => {
       if (cell.value !== `mine`) {
-        let minesAround = 0
+        let minesAround = 0;
 
         DIRECTIONS.map(([dRow, dCol]) => {
-          const newRow = rowIndex + dRow
-          const newCol = colIndex + dCol
+          const newRow = rowIndex + dRow;
+          const newCol = colIndex + dCol;
 
           if (newRow in newBoard && newCol in row && newBoard[newRow][newCol].value === `mine`)
-            minesAround++
-        })
+            minesAround++;
+        });
 
-        if (minesAround > 0) cell.value = minesAround
+        if (minesAround > 0) cell.value = minesAround;
       }
-    })
-  })
+    });
+  });
 
-  return newBoard
+  return newBoard;
 }
 
 export function revealEmptyCells(cell: GameCell) {
-  const queue: Point[] = [getRowCol(cell)]
+  const queue: Point[] = [getRowCol(cell)];
 
-  let n: Point | undefined
+  let n: Point | undefined;
   while ((n = queue.shift())) {
-    const [currentRow, currentCol] = n
+    const [currentRow, currentCol] = n;
 
-    const cell = board.value[currentRow][currentCol]
-    cell.isOpened = true
+    const cell = board.value[currentRow][currentCol];
+    cell.isOpened = true;
 
     if (!cell.value) {
       for (const [dRow, dCol] of DIRECTIONS) {
-        const newRow = currentRow + dRow
-        const newCol = currentCol + dCol
+        const newRow = currentRow + dRow;
+        const newCol = currentCol + dCol;
 
         if (
           newRow in board.value &&
@@ -91,7 +91,7 @@ export function revealEmptyCells(cell: GameCell) {
           !board.value[newRow][newCol].isOpened &&
           !board.value[newRow][newCol].isFlagged
         ) {
-          queue.push([newRow, newCol])
+          queue.push([newRow, newCol]);
         }
       }
     }
@@ -102,79 +102,79 @@ export function revealMines(highlightWin?: boolean) {
   for (const row of board.value)
     for (const cell of row)
       if (cell.value === `mine`) {
-        cell.isOpened = true
-        if (highlightWin) cell.hightlight = `bg-[green]`
+        cell.isOpened = true;
+        if (highlightWin) cell.hightlight = `bg-[green]`;
       }
 }
 
 export function openCell(cell: GameCell) {
-  startTimer()
+  startTimer();
 
   if (cell.value === `mine`) {
-    if (game.isFirstTime) return startNewGame(cell)
+    if (game.isFirstTime) return startNewGame(cell);
 
-    sounds.gameOver.play()
-    cell.isOpened = true
-    cell.hightlight = `bg-[red]`
-    gameStatus.value = `lose`
-    revealMines(false)
+    sounds.gameOver.play();
+    cell.isOpened = true;
+    cell.hightlight = `bg-[red]`;
+    gameStatus.value = `lose`;
+    revealMines(false);
   } else {
     if (typeof cell.value && !!cell.value) {
-      sounds.revealNumber.play()
-      cell.isOpened = true
+      sounds.revealNumber.play();
+      cell.isOpened = true;
     } else if (!cell.value) {
-      sounds.revealEmpty.play()
-      revealEmptyCells(cell)
+      sounds.revealEmpty.play();
+      revealEmptyCells(cell);
     }
 
     if (checkGameWin()) {
-      sounds.gameWin.play()
-      revealMines(true)
-      gameStatus.value = `win`
+      sounds.gameWin.play();
+      revealMines(true);
+      gameStatus.value = `win`;
     }
   }
 
-  game.isFirstTime = false
-  board.refresh?.()
+  game.isFirstTime = false;
+  board.refresh?.();
 }
 
 export function checkGameWin() {
-  let unopenedCells = 0
+  let unopenedCells = 0;
 
-  for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++
+  for (const row of board.value) for (const cell of row) if (!cell.isOpened) unopenedCells++;
 
-  return unopenedCells === game.totalMines
+  return unopenedCells === game.totalMines;
 }
 
 export function refreshMinesLeft() {
-  let mines = 0
+  let mines = 0;
 
   for (const row of board.value)
     for (const cell of row) {
-      if (cell.value === `mine`) mines++
-      if (cell.isFlagged) mines--
+      if (cell.value === `mine`) mines++;
+      if (cell.isFlagged) mines--;
     }
 
-  minesLeft.value = mines
+  minesLeft.value = mines;
 }
 
 function getValidBoard(row: number, col: number) {
-  let newBoard
-  do newBoard = createBoard()
-  while (newBoard[row][col].value === `mine`)
+  let newBoard;
+  do newBoard = createBoard();
+  while (newBoard[row][col].value === `mine`);
 
-  return newBoard
+  return newBoard;
 }
 
 function getRowCol(cellToFind: GameCell): Point {
-  const i = board.value.flat().findIndex((cell) => cell === cellToFind)
-  return [Math.floor(i / game.cols), i % game.cols]
+  const i = board.value.flat().findIndex((cell) => cell === cellToFind);
+  return [Math.floor(i / game.cols), i % game.cols];
 }
 
 export function nowS() {
-  return performance.now() / 1000
+  return performance.now() / 1000;
 }
 
 function randIndex(max: number) {
-  return Math.floor(Math.random() * max)
+  return Math.floor(Math.random() * max);
 }

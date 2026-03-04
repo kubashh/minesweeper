@@ -1,6 +1,6 @@
-import GameStatus from "./GameStatus"
-import Timer from "./Timer"
-import { startNewGame } from "../lib/util"
+import GameStatus from "./GameStatus";
+import Timer from "./Timer";
+import { startNewGame } from "../lib/util";
 
 export default function Header() {
   return (
@@ -14,5 +14,5 @@ export default function Header() {
       </button>
       <Timer />
     </header>
-  )
+  );
 }

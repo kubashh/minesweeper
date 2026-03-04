@@ -1,5 +1,5 @@
-import { signal } from "./signals"
-import { createBoard } from "./util"
+import { signal } from "./signals";
+import { createBoard } from "./util";
 
 export const CELL_NUMBER_COLORS = [
   null,
@@ -11,7 +11,7 @@ export const CELL_NUMBER_COLORS = [
   `text-[steelblue]`,
   `text-[black]`,
   `text-[black]`,
-]
+];
 
 export const DIRECTIONS = [
   [-1, -1],
@@ -22,7 +22,7 @@ export const DIRECTIONS = [
   [1, -1],
   [1, 0],
   [1, 1],
-]
+];
 
 export const LEVELS = {
   easy: {
@@ -40,15 +40,15 @@ export const LEVELS = {
     cols: 30,
     totalMines: 99,
   },
-}
+};
 
 export const game = {
   isFirstTime: true,
   ...LEVELS.easy,
-}
+};
 
-export const gameStatus = signal<TGameStatus>(`playing`)
-export const level = signal<TLevel>(`easy`)
-export const timer = signal(0)
-export const minesLeft = signal(game.totalMines)
-export const board = signal<TBoard>(createBoard())
+export const gameStatus = signal<TGameStatus>(`playing`);
+export const level = signal<TLevel>(`easy`);
+export const timer = signal(0);
+export const minesLeft = signal(game.totalMines);
+export const board = signal<TBoard>(createBoard());

@@ -1,28 +1,9 @@
-import clsx from "clsx"
-import bombImage from "@/public/icons/bomb.svg"
-import flagImage from "@/public/icons/redFlag.png"
-import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts"
-import { openCell, refreshMinesLeft } from "../lib/util"
-import { sounds } from "../lib/sfx"
-
-function handleCellLeftClick(cell: GameCell) {
-  if (gameStatus.value === `lose` || cell.isOpened || cell.isFlagged) return
-
-  openCell(cell)
-}
-
-function handleCellRightClick(cell: GameCell) {
-  if (gameStatus.value !== `playing` || cell.isOpened) return
-  if (minesLeft.value === 0 && !cell.isFlagged) return
-
-  if (cell.isFlagged) sounds.flagPlace.play()
-  else sounds.flagRemove.play()
-
-  cell.isFlagged = !cell.isFlagged
-
-  refreshMinesLeft()
-  board.refresh?.()
-}
+import clsx from "clsx";
+import bombImage from "@/public/icons/bomb.svg";
+import flagImage from "@/public/icons/redFlag.png";
+import { board, CELL_NUMBER_COLORS, gameStatus, level, minesLeft } from "../lib/consts";
+import { openCell, refreshMinesLeft } from "../lib/util";
+import { sounds } from "../lib/sfx";
 
 export default function Cell({ cell }: CellProps) {
   return (
@@ -44,5 +25,24 @@ export default function Cell({ cell }: CellProps) {
       {cell.isOpened && cell.value === `mine` && <img className="w-[80%] h-[80%]" src={bombImage.src} />}
       {!cell.isOpened && cell.isFlagged && <img className="w-[80%] h-[80%]" src={flagImage.src} />}
     </div>
-  )
+  );
+}
+
+function handleCellLeftClick(cell: GameCell) {
+  if (gameStatus.value === `lose` || cell.isOpened || cell.isFlagged) return;
+
+  openCell(cell);
+}
+
+function handleCellRightClick(cell: GameCell) {
+  if (gameStatus.value !== `playing` || cell.isOpened) return;
+  if (minesLeft.value === 0 && !cell.isFlagged) return;
+
+  if (cell.isFlagged) sounds.flagPlace.play();
+  else sounds.flagRemove.play();
+
+  cell.isFlagged = !cell.isFlagged;
+
+  refreshMinesLeft();
+  board.refresh?.();
 }

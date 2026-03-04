@@ -1,5 +1,6 @@
-import clsx from "clsx"
-import { game, level, LEVELS } from "../lib/consts"
+import clsx from "clsx";
+import { game, level, LEVELS } from "../lib/consts";
+import { startNewGame } from "../lib/util";
 
 export default function SelectLevel() {
   return (
@@ -12,8 +13,9 @@ export default function SelectLevel() {
               level.value === levelName ? `bg-zinc-700` : `bg-zinc-900`,
             )}
             onClick={() => {
-              Object.assign(game, LEVELS[levelName as TLevel])
-              level.value = levelName as TLevel
+              Object.assign(game, LEVELS[levelName as TLevel]);
+              level.value = levelName as TLevel;
+              startNewGame();
             }}
           >
             {levelName}
@@ -21,5 +23,5 @@ export default function SelectLevel() {
         </li>
       ))}
     </ul>
-  )
+  );
 }

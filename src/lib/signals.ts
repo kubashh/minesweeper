@@ -1,53 +1,37 @@
-import { useState } from "react"
+import { useState } from "react";
 
-type Void = () => void
-
-function useConst<T>(v: T) {
-  return useState<T>(v)[0]
-}
+type Void = () => void;
 
 function useRefresh() {
-  const f = useState(false)[1]
-  return () => f((prev) => !prev)
+  const f = useState(false)[1];
+  return () => f((prev) => !prev);
 }
 
 class Sig<T> {
-  private v: T
+  private v: T;
   refresh: Void = () => {
-    throw Error(`Refresh not bind!`)
-  }
+    throw Error(`Refresh not bind!`);
+  };
 
   constructor(v: T) {
-    this.v = v
+    this.v = v;
   }
 
-  bind(fn?: Void) {
-    if (fn) {
-      const refresh = useRefresh()
-      this.refresh = () => {
-        fn()
-        refresh()
-      }
-    } else this.refresh = useRefresh()
+  bind() {
+    this.refresh = useRefresh();
   }
 
   get value() {
-    return this.v
+    return this.v;
   }
   set value(v: T) {
-    this.v = v
-    this.refresh?.()
+    this.v = v;
+    this.refresh?.();
   }
 }
 
-export type Signal<T> = Sig<T>
+export type Signal<T> = Sig<T>;
 
 export function signal<T>(v: T) {
-  return new Sig(v)
-}
-
-export function useSignal<T>(v: T, f?: Void) {
-  const sig = useConst(new Sig(v))
-  sig.bind(f)
-  return sig
+  return new Sig(v);
 }
