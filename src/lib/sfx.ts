@@ -1,9 +1,7 @@
 export const sounds: TSoundList = {} as TSoundList;
 
-if (typeof window !== `undefined`) {
-  window.oncontextmenu = (e) => e.preventDefault();
-  loadSFX();
-}
+window.oncontextmenu = (e) => e.preventDefault();
+loadSFX();
 
 function loadSFX() {
   class NewAudio extends Audio {

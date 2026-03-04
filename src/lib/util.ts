@@ -3,18 +3,14 @@ import { board, boardRefresh, DIRECTIONS, game, gameStatusSignal, minesLeftSigna
 import { sounds } from "./sfx";
 
 export function startNewGame(cell?: GameCell) {
-  let newBoard: TBoard;
   if (cell) {
     const [row, col] = getRowCol(cell);
-    newBoard = getValidBoard(row, col);
+    // Create valid board
+    do createBoard();
+    while (board[row][col].value === `mine`);
     setTimeout(() => openCell(board[row][col]));
   } else {
-    newBoard = createBoard();
-  }
-  board.length = newBoard.length;
-  for (const index in newBoard) {
-    board.length = newBoard.length;
-    board[index] = newBoard[index];
+    createBoard();
   }
 
   game.isFirstTime = true;
@@ -26,9 +22,13 @@ export function startNewGame(cell?: GameCell) {
 
 export function createBoard() {
   let newBoard = createEmptyBoard();
-  newBoard = fillBoardMines(newBoard);
-  newBoard = fillBoardNumbers(newBoard);
-  return newBoard;
+  board.length = newBoard.length;
+  for (const index in newBoard) {
+    board.length = newBoard.length;
+    board[index] = newBoard[index];
+  }
+  fillBoardMines();
+  fillBoardNumbers();
 }
 
 function createEmptyBoard(): TBoard {
@@ -41,40 +41,35 @@ function createEmptyBoard(): TBoard {
   );
 }
 
-function fillBoardMines(newBoard: TBoard) {
+function fillBoardMines() {
   for (let mines = 0; mines < game.totalMines; ) {
     const row = randIndex(game.rows);
     const col = randIndex(game.cols);
 
-    if (newBoard[row][col].value !== `mine`) {
-      (newBoard[row][col] as GameCell).value = `mine`;
+    if (board[row][col].value !== `mine`) {
+      (board[row][col] as GameCell).value = `mine`;
       mines++;
     }
   }
-
-  return newBoard;
 }
 
-function fillBoardNumbers(newBoard: TBoard) {
-  newBoard.map((row, rowIndex) => {
+function fillBoardNumbers() {
+  board.map((row, rowIndex) => {
     row.map((cell, colIndex) => {
       if (cell.value !== `mine`) {
         let minesAround = 0;
 
-        DIRECTIONS.map(([dRow, dCol]) => {
+        for (const [dRow, dCol] of DIRECTIONS) {
           const newRow = rowIndex + dRow;
           const newCol = colIndex + dCol;
 
-          if (newRow in newBoard && newCol in row && newBoard[newRow][newCol].value === `mine`)
-            minesAround++;
-        });
+          if (newRow in board && newCol in row && board[newRow][newCol].value === `mine`) minesAround++;
+        }
 
         if (minesAround > 0) cell.value = minesAround;
       }
     });
   });
-
-  return newBoard;
 }
 
 export function revealEmptyCells(cell: GameCell) {
@@ -105,6 +100,11 @@ export function revealEmptyCells(cell: GameCell) {
   }
 }
 
+function getRowCol(cellToFind: GameCell): Point {
+  const i = board.flat().findIndex((cell) => cell === cellToFind);
+  return [Math.floor(i / game.cols), i % game.cols];
+}
+
 export function revealMines(highlightWin?: boolean) {
   for (const row of board)
     for (const cell of row)
@@ -126,7 +126,7 @@ export function openCell(cell: GameCell) {
     gameStatusSignal.set(`lose`);
     revealMines(false);
   } else {
-    if (typeof cell.value && !!cell.value) {
+    if (cell.value) {
       sounds.revealNumber.play();
       cell.isOpened = true;
     } else if (!cell.value) {
@@ -163,19 +163,6 @@ export function refreshMinesLeft() {
     }
 
   minesLeftSignal.set(mines);
-}
-
-function getValidBoard(row: number, col: number) {
-  let newBoard;
-  do newBoard = createBoard();
-  while (newBoard[row][col].value === `mine`);
-
-  return newBoard;
-}
-
-function getRowCol(cellToFind: GameCell): Point {
-  const i = board.flat().findIndex((cell) => cell === cellToFind);
-  return [Math.floor(i / game.cols), i % game.cols];
 }
 
 export function nowS() {

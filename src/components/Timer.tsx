@@ -33,13 +33,13 @@ export function resetTimer() {
 export default function Timer() {
   return (
     <div className="flex items-center text-2xl justify-self-end">
-      <img width="40" height="40" src={timerImage.src} />
-      {timeToString()}
+      <img width="36" height="36" src={timerImage.src} />
+      <TimePlayed />
     </div>
   );
 }
 
-function timeToString() {
+function TimePlayed() {
   const timer = timerSignal.use();
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;

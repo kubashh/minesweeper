@@ -15,7 +15,7 @@ type TGameStatus = `playing` | `lose` | `win`;
 type TLevel = `easy` | `medium` | `expert`;
 
 // Cell
-type OpenedCail = {
+type OpenedCell = {
   isOpened: true;
   isFlagged: false;
 };
@@ -34,9 +34,9 @@ type NumberCell = {
   value: number;
 };
 
-type OpenedMineCell = OpenedCail & MineCell;
+type OpenedMineCell = OpenedCell & MineCell;
 type ClosedMineCell = ClosedCell & MineCell;
-type OpenedNumberCell = OpenedCail & NumberCell;
+type OpenedNumberCell = OpenedCell & NumberCell;
 type ClosedNumberCell = ClosedCell & NumberCell;
 
 type GameCell = OpenedMineCell | ClosedMineCell | OpenedNumberCell | ClosedNumberCell;

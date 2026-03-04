@@ -1,5 +1,3 @@
-"use client";
-
 import bombIcon from "@/public/icons/bomb.svg";
 import { gameStatusSignal, minesLeftSignal } from "../lib/consts";
 import { stopTimer } from "./Timer";
@@ -16,7 +14,7 @@ export default function GameStatus() {
         `Wygrałeś!`
       ) : (
         <>
-          <img width="40" height="40" src={bombIcon.src} />
+          <img width="36" height="36" src={bombIcon.src} />
           <MinesLeft />
         </>
       )}

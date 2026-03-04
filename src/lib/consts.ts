@@ -13,7 +13,7 @@ export const CELL_NUMBER_COLORS = [
   `text-[black]`,
 ];
 
-export const DIRECTIONS = [
+export const DIRECTIONS = new Set([
   [-1, -1],
   [-1, 0],
   [-1, 1],
@@ -22,7 +22,7 @@ export const DIRECTIONS = [
   [1, -1],
   [1, 0],
   [1, 1],
-];
+]);
 
 export const LEVELS = {
   easy: {
@@ -52,4 +52,5 @@ export const levelSignal = createSignal<TLevel>(`easy`);
 export const timerSignal = createSignal(0);
 export const minesLeftSignal = createSignal(game.totalMines);
 export const boardRefresh = { refresh() {} };
-export const board = createBoard();
+export const board: TBoard = [];
+createBoard();
