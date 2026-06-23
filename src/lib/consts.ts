@@ -1,5 +1,6 @@
-import { createSignal } from "wdwh/signal";
+import { createSignal } from "wdwh";
 import { createBoard } from "./util";
+import { loadSFX } from "./sfx";
 
 export const CELL_NUMBER_COLORS = [
   null,
@@ -53,4 +54,8 @@ export const timerSignal = createSignal(0);
 export const minesLeftSignal = createSignal(game.totalMines);
 export const boardRefresh = { refresh() {} };
 export const board: TBoard = [];
+
+// Setup
 createBoard();
+window.oncontextmenu = (e) => e.preventDefault();
+loadSFX();

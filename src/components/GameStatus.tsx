@@ -23,6 +23,5 @@ export default function GameStatus() {
 }
 
 function MinesLeft() {
-  const minesLeft = minesLeftSignal.use();
-  return minesLeft;
+  return minesLeftSignal.use();
 }
